@@ -64,8 +64,8 @@ const CandlestickChart = ({ selectedCompany, showSMA }) => {
     },
     plotOptions: {
       candlestick: {
-        color: "#8058bc", // Bearish candlestick color
-        // upColor: "#00ff00", // Optionally define the bullish color
+        color: "#ff0000", // Bearish candlestick color
+        upColor: "#008000", // Optionally define the bullish color
       },
     },
     series: [
