@@ -59,7 +59,7 @@ const CandlestickChart = ({ selectedCompany, showSMA }) => {
         },
       },
       labelStyle: {
-        color: "#ffffff",
+        color: "#686e70",
       },
     },
     plotOptions: {
