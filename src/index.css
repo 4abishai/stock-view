@@ -4,6 +4,64 @@ body, html {
   margin: 0;
 }
 
-/* #root {
-  min-height: 100vh;
-} */
+.highcharts-point-up {
+  fill: #4caf50 !important; /* Green color */
+  stroke: #2e7d32 !important; /* Darker green border */
+}
+
+.highcharts-point-down {
+  fill: #f44336 !important; /* Red color */
+  stroke: #d32f2f !important; /* Darker red border */
+}
+.highcharts-background {
+  fill: #292524;
+}
+
+.highcharts-yaxis-labels text {
+  fill: white !important;  /* Red color */
+  font-size: 14px !important;
+  font-weight: bold;
+}
+
+.highcharts-yaxis-grid path {
+  stroke: #7c7c7c;
+}
+
+.highcharts-xaxis path {
+  stroke: #7c7c7c;
+}
+
+.highcharts-label-box {
+  fill: #000000
+}
+
+.highcharts-range-input rect{
+  fill: #303030;
+}
+
+.highcharts-label .highcharts-range-label text {
+  fill: white;
+}
+
+.highcharts-tooltip text tspan{
+  color: white !important;
+  fill: #ffffff;
+  text-shadow: 0 0 3px black;
+}
+
+.highcharts-tooltip text{
+  fill: rgb(192, 192, 192) !important; 
+}
+
+.highcharts-xaxis-labels text{
+  fill: white !important;
+}
+
+.highcharts-text-outline{
+  stroke:none;
+  color: #7c7c7c;
+}
+
+.highcharts-credits {
+  opacity: 0;
+}

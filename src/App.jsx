@@ -10,33 +10,36 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
-
-// Assume CandlestickChart is imported correctly
+import TextField from "@mui/material/TextField";
 import CandlestickChart from "./CandlestickChart";
 
-const drawerWidth = 249; // Set drawer width
+const drawerWidth = 249;
 
 function MyApp() {
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [selectedCompany, setSelectedCompany] = useState("meta"); // State to track selected company
-  const [showSMA, setShowSMA] = useState(false); // State to track SMA visibility
+  const [selectedCompany, setSelectedCompany] = useState("meta");
+  const [showSMA, setShowSMA] = useState(false);
+  const [smaDays, setSmaDays] = useState(10);
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md")); // For screens smaller than 960px
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
-  // Toggle Drawer function
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);
   };
 
-  // Handle button click to set selected company
   const handleButtonClick = (companyName) => {
-    console.log(companyName);
-    setSelectedCompany(companyName); // Update the selected company
+    setSelectedCompany(companyName);
   };
 
-  // Toggle SMA visibility
   const handleSMAClick = () => {
-    setShowSMA((prev) => !prev); // Toggle the showSMA state
+    setShowSMA((prev) => !prev);
+  };
+
+  const handleDaysChange = (event) => {
+    const value = parseInt(event.target.value);
+    if (value > 0) {
+      setSmaDays(value);
+    }
   };
 
   return (
@@ -64,13 +67,12 @@ function MyApp() {
           <Typography variant="h6" noWrap>
             StockView
           </Typography>
-          {/* Spacer to push GitHub icon to the right */}
           <Box sx={{ flexGrow: 1 }} />
           <IconButton
             sx={{
               padding: 0,
               backgroundColor: "#ffffff",
-            boxShadow: "0 0 24px rgba(0, 0, 0, 0.3)", // Initial shadow
+              boxShadow: "0 0 24px rgba(0, 0, 0, 0.3)",
               "&:hover": {
                 backgroundColor: "#ffffff",
                 boxShadow: "0 0 16px rgba(0, 0, 0, 0.4)",
@@ -99,11 +101,11 @@ function MyApp() {
         open={isMobile ? drawerOpen : true}
         onClose={toggleDrawer}
         ModalProps={{
-          keepMounted: true, // Keeps the drawer in the DOM when hidden
+          keepMounted: true,
         }}
         sx={{
-          height: "calc(100% - 64px)", // Adjust height for AppBar
-          top: 64, // Matches AppBar height
+          height: "calc(100% - 64px)",
+          top: 64,
           width: isMobile ? "auto" : `${drawerWidth}px`,
           "& .MuiDrawer-paper": {
             height: "calc(100% - 64px)",
@@ -111,24 +113,43 @@ function MyApp() {
             boxSizing: "border-box",
             width: `${drawerWidth}px`,
             display: "flex",
-            flexDirection: "column", // Ensures the content fills the drawer height
+            flexDirection: "column",
+            backgroundColor: "#1b1917",
+            // Remove default drawer styles
+            background: "none",
+            boxShadow: "none",
+            border: "none",
+            // Add a pseudo-element for the red border
+            "&::after": {
+              content: '""',
+              position: "absolute",
+              top: 0,
+              right: 0,
+              bottom: 0,
+              width: "1px",
+              backgroundColor: "rgba(255, 255, 255, 0.40)",
+              zIndex: 1,
+            },
           },
         }}
       >
         <Box
           sx={{
             p: 2,
-            backgroundColor: "#242424",
+            backgroundColor: "#1b1917",
             color: "white",
-            flexGrow: 1, // Makes the Box grow to fill the available space
+            flexGrow: 1,
             display: "flex",
             flexDirection: "column",
-            justifyContent: "justify-content", // Optional, to separate sections
+            justifyContent: "justify-content",
           }}
         >
+          {/* Company Section */}
           <Box>
-            <Typography variant="h6">Company</Typography>
-            <Divider sx={{ backgroundColor: "white" }} />
+            <Typography variant="h6" sx={{ fontSize: "1.2rem", pb: 0.8 }}>
+              Company
+            </Typography>
+            <Divider sx={{ backgroundColor: "rgb(255, 255, 255, 0.60)" }} />
             <Box sx={{ mt: 4 }}>
               {[
                 "googl",
@@ -144,12 +165,17 @@ function MyApp() {
               ].map((name) => (
                 <Button
                   key={name}
-                  variant="contained"
+                  variant={selectedCompany === name ? "contained" : "outlined"}
                   sx={{
                     width: "100%",
                     marginBottom: 1,
                     color: "white",
-                    backgroundColor: "#e84529",
+                    border: "none",
+                    backgroundColor: selectedCompany === name ? "#44403c" : "",
+                    "&:hover": {
+                      backgroundColor:
+                        selectedCompany === name ? "#57534e" : "#44403c40",
+                    },
                   }}
                   onClick={() => handleButtonClick(name)}
                 >
@@ -159,21 +185,63 @@ function MyApp() {
             </Box>
           </Box>
 
+          {/* Indicator Section */}
           <Box sx={{ mt: 4 }}>
-            <Typography variant="h6">Tools</Typography>
-            <Divider sx={{ backgroundColor: "white" }} />
+            <Typography variant="h6" sx={{ fontSize: "1.2rem", pb: 0.8 }}>
+              Indicator
+            </Typography>
+            <Divider sx={{ backgroundColor: "rgb(255, 255, 255, 0.60)" }} />
             <Button
-              variant="outlined"
+              variant={showSMA ? "contained" : "outlined"}
               sx={{
                 width: "100%",
                 mt: 4,
                 color: "white",
-                borderColor: "white",
+                borderRadius: "0px",
+                border: "none",
+                borderLeft: showSMA ? "" : 1,
+                borderColor: "#57534f",
+                borderWidth: "8px",
+                backgroundColor: showSMA ? "#e84529" : "#292524",
+                "&:hover": {
+                  backgroundColor: showSMA ? "#f0563a" : "#3d3936", // Lighter versions of the original colors
+                },
               }}
               onClick={handleSMAClick}
             >
               SMA
             </Button>
+            {/* Show TextField only when SMA is selected */}
+            {showSMA && (
+              <TextField
+                id="sma-days"
+                label="Days"
+                variant="filled"
+                type="number"
+                value={smaDays}
+                onChange={handleDaysChange}
+                InputLabelProps={{
+                  style: { color: "white" },
+                }}
+                InputProps={{
+                  style: { color: "white" },
+                  inputProps: { min: 1 },
+                }}
+                sx={{
+                  mt: 2,
+                  width: "100%",
+                  "& .MuiFilledInput-root": {
+                    backgroundColor: "rgba(255, 255, 255, 0.1)",
+                    "&:hover": {
+                      backgroundColor: "rgba(255, 255, 255, 0.15)",
+                    },
+                    "&.Mui-focused": {
+                      backgroundColor: "rgba(255, 255, 255, 0.15)",
+                    },
+                  },
+                }}
+              />
+            )}
           </Box>
         </Box>
       </Drawer>
@@ -186,11 +254,12 @@ function MyApp() {
           pt: 8,
           pr: 5,
           pl: 5,
+          backgroundColor: "#1b1917",
           marginLeft: isMobile ? 0 : `0px`,
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          minHeight: "calc(100vh - 64px)", // Ensures the content fills the viewport height minus AppBar
+          minHeight: "calc(100vh - 64px)",
         }}
       >
         <Box
@@ -198,21 +267,22 @@ function MyApp() {
             height: "80%",
             width: "85%",
             padding: 5,
-            borderRadius: "16px", // Border radius for rounded corners
-            backgroundColor: "#ffffff",
-            boxShadow: "0 0 24px rgba(0, 0, 0, 0.2)", // Initial shadow
-            border: "1px solid #e0e0e0", // Optional light border
-            transition: "box-shadow 0.3s ease-in-out", // Smooth transition for shadow change
+            borderRadius: "16px",
+            backgroundColor: "#292524",
+            boxShadow: "0 0 24px rgba(0, 0, 0, 0.2)",
+            border: "1px solid rgb(224, 224, 224, 0.40)",
+            // border: "none",
+            transition: "box-shadow 0.3s ease-in-out",
             "&:hover": {
-              boxShadow: "0 0 32px rgba(0, 0, 0, 0.35)", // Darker shadow on hover
+              boxShadow: "0 0 23px rgba(255, 255, 255, 0.40)",
             },
           }}
         >
           <Typography variant="h4" align="center">
-            {/* Pass selectedCompany and showSMA as props to CandlestickChart */}
             <CandlestickChart
               selectedCompany={selectedCompany}
               showSMA={showSMA}
+              smaDays={smaDays}
             />
           </Typography>
         </Box>

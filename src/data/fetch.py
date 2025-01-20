@@ -2,16 +2,13 @@ import yfinance as yf
 import pandas as pd
 import json
 
-# List of ticker symbols for 10 different companies
 ticker_symbols = [
     "GOOGL", "AAPL", "MSFT", "AMZN", "TSLA", 
     "META", "NFLX", "NVDA", "INTC", "IBM"
 ]
 
-# Define the period
 period = "5y"
 
-# Loop over the ticker symbols and fetch the data
 for ticker_symbol in ticker_symbols:
     # Fetch the data
     data = yf.download(ticker_symbol, period=period)
@@ -29,8 +26,7 @@ for ticker_symbol in ticker_symbols:
     # Convert the data to a list of lists
     data_list = data.values.tolist()
 
-    # Define the file path
-    file_path = f"/home/abishai/Codes/frontend/src/data/{ticker_symbol.lower()}.json"
+    file_path = f"src/data/{ticker_symbol.lower()}.json"
     
     # Save to JSON
     with open(file_path, 'w') as json_file:
